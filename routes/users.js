@@ -3,10 +3,24 @@ var router = express.Router();
 
 var User = require('../models/user_model').User
 var base64ToImage = require('base64-to-image')
+var usersProjection = { 
+  __v: false,
+  reports: false,
+  password: false
+};
 
-/* GET users listing. */
 router.get('/', function(req, res, next) {
-  User.find((err, data) => {
+  User.find({}, usersProjection,(err, data) => {
+    if (err) {
+      res.send(err)
+    } else {
+      res.send(data)
+    }
+  })
+})
+
+router.get('/:id', function(req, res, next) {
+  User.findById(req.params.id, usersProjection, (err, data) => {
     if (err) {
       res.send(err)
     } else {
@@ -39,8 +53,7 @@ router.post('/signup', (req, res) => {
 })
 
 router.post('/signin', (req, res) => {
-  User.findOne({ 'username': req.body.username, 'password': req.body.password },
-  ['_id', 'name', 'isPro'],
+  User.findOne({ 'username': req.body.username, 'password': req.body.password }, usersProjection,
   (err, data) => {
     if (err) {
       res.status(400).send(err)
@@ -71,14 +84,14 @@ router.post('/facebook', (req, res) => {
   })
 })
 
-router.get('/upgrate/:id', (req, res) => {
+router.get('/upgrade/:id', (req, res) => {
   User.findByIdAndUpdate(req.params.id, { isPro: true },(err, data) => {
     if (err) {
       res.status(400).send(err)
     } else {
       res.send({
         '_id': data._id,
-        'isPro': data.isPro
+        'isPro': true
       })
     }
   })
@@ -108,6 +121,16 @@ router.post('/editImage', (req, res) => {
       res.send({
         'imagePath': req.body.id + '.jpg'
       })
+    }
+  })
+})
+
+router.delete('/', (req, res) => {
+  User.remove({}, (err) => {
+    if (err) {
+      res.send(err)
+    } else {
+      res.send(true)
     }
   })
 })

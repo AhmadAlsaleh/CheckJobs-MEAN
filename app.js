@@ -3,19 +3,21 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var mongoose = require('mongoose');
+var connectionStringsDB = require('./models/globals').remote;
+var app = express();
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var reportsRouter = require('./routes/reports');
+var placesRouter = require('./routes/places');
+var spotsRouter = require('./routes/spots');
 
-var app = express();
-
-var mongoose = require('mongoose');
-const remoteDB = 'mongodb://admin:A16248Ba@ds135726.mlab.com:35726/check-jobs-mean';
-mongoose.connect(remoteDB, { useNewUrlParser: true }, (err) => {
+mongoose.connect(connectionStringsDB, { useNewUrlParser: true }, (err) => {
   if (err) {
     console.log(err);
   } else {
-    console.log('Connected ;-)');
+    console.log('Connected to Database ;-)');
   }
 });
 
@@ -31,6 +33,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/reports', reportsRouter);
+app.use('/places', placesRouter);
+app.use('/spots', spotsRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

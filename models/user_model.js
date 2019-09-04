@@ -10,8 +10,10 @@ const user = mongoose.Schema({
     facebookID: String,
     imagePath: String,
     isPro: { type: Boolean, default: false },
+    isActive: { type: Boolean, default: true },
     places: [placesSchema],
-    reports: [reportsSchema]
+    reports: [reportsSchema],
+    starredSpots: [String]
 })
 
 module.exports = {

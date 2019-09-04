@@ -2,7 +2,8 @@ var mongoose = require('mongoose')
 
 const report = mongoose.Schema({
     creationDate: { type: Date, default: new Date() },
-    body: String
+    body: String,
+    isDone: { type: Boolean, default: false }
 })
 
 module.exports = {

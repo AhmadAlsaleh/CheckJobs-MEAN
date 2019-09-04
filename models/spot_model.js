@@ -10,7 +10,9 @@ const spot = mongoose.Schema({
     lowSal: Number,
     highSal: Number,
     gender: { type: String, default: 'Not important'},
-    description: String
+    description: String,
+    isActive: { type: Boolean, default: true },
+    isDone: { type: Boolean, default: false }
 })
 
 module.exports = {
